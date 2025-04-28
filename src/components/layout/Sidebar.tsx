@@ -66,7 +66,7 @@ const Sidebar = () => {
               {mainNavItems.map((item) => (
                 <SidebarMenuItem key={item.path}>
                   <SidebarMenuButton 
-                    active={location.pathname === item.path}
+                    isActive={location.pathname === item.path}
                     onClick={() => navigate(item.path)}
                   >
                     <item.icon size={20} />

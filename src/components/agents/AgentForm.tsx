@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useVoiceAgent, Agent } from '@/hooks/useVoiceAgent';
@@ -14,6 +13,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Info, Upload, Globe, FileText, FileQuestion } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 // Form validation schema
 const formSchema = z.object({
@@ -224,8 +224,14 @@ const AgentForm = ({ existingAgent, mode }: AgentFormProps) => {
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold flex items-center">
                   Knowledge Base
-                  <Info className="ml-2 h-4 w-4 text-muted-foreground hover:text-foreground cursor-help" 
-                    title="Add external knowledge to your agent" />
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Info className="ml-2 h-4 w-4 text-muted-foreground hover:text-foreground cursor-help" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      Add external knowledge to your agent
+                    </TooltipContent>
+                  </Tooltip>
                 </h3>
                 
                 <FormField
