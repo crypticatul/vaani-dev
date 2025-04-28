@@ -6,7 +6,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { BarChart, LineChartIcon, PieChart, Users } from 'lucide-react';
 import { useVoiceAgent } from '@/hooks/useVoiceAgent';
 import AgentForm from '@/components/agents/AgentForm';
-import { Button } from '@/components/ui/button';
 
 const fadeIn = {
   initial: { opacity: 0, y: 20 },
