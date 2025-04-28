@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -84,12 +85,41 @@ export default {
 					to: {
 						height: '0'
 					}
-				}
+				},
+                'glow': {
+                    '0%, 100%': { 
+                        boxShadow: '0 0 15px 5px rgba(139, 92, 246, 0.7)',
+                        borderColor: 'rgba(139, 92, 246, 0.7)'
+                    },
+                    '50%': { 
+                        boxShadow: '0 0 30px 10px rgba(139, 92, 246, 0.3)',
+                        borderColor: 'rgba(139, 92, 246, 0.3)'
+                    }
+                },
+                'text-glow': {
+                    '0%, 100%': { 
+                        textShadow: '0 0 10px rgba(139, 92, 246, 0.7), 0 0 20px rgba(139, 92, 246, 0.5)'
+                    },
+                    '50%': { 
+                        textShadow: '0 0 15px rgba(139, 92, 246, 0.9), 0 0 30px rgba(139, 92, 246, 0.7)'
+                    }
+                },
+                'pulse': {
+                    '0%, 100%': { opacity: 1 },
+                    '50%': { opacity: 0.7 }
+                }
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
-			}
+				'accordion-up': 'accordion-up 0.2s ease-out',
+                'glow': 'glow 2s infinite',
+                'text-glow': 'text-glow 2s infinite',
+                'pulse': 'pulse 2s infinite'
+			},
+            fontFamily: {
+                'orbitron': ['Orbitron', 'sans-serif'],
+                'montserrat': ['Montserrat', 'sans-serif']
+            }
 		}
 	},
 	plugins: [require("tailwindcss-animate")],
