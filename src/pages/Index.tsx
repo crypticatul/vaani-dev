@@ -1,150 +1,143 @@
 
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
+import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent } from '@/components/ui/card';
+import { BarChart, LineChartIcon, PieChart, Users } from 'lucide-react';
+import { useVoiceAgent } from '@/hooks/useVoiceAgent';
+import AgentForm from '@/components/agents/AgentForm';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { MessageCircle, Users, ExternalLink, Code, BarChart } from 'lucide-react';
 
-const Index = () => {
-  const { user } = useAuth();
-  const navigate = useNavigate();
+const fadeIn = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -20 }
+};
 
-  useEffect(() => {
-    // If the user is not logged in, redirect to login page
-    if (!user) {
-      navigate('/login');
+const Dashboard = () => {
+  const { agents } = useVoiceAgent();
+  const [activeTab, setActiveTab] = useState('analytics');
+
+  const stats = [
+    {
+      title: "Total Agents",
+      value: agents.length,
+      icon: Users,
+      change: "+12.5%",
+      color: "text-primary"
+    },
+    {
+      title: "Active Sessions",
+      value: "324",
+      icon: LineChartIcon,
+      change: "+8.2%",
+      color: "text-green-500"
+    },
+    {
+      title: "Total Interactions",
+      value: "12.5k",
+      icon: BarChart,
+      change: "+23.1%",
+      color: "text-blue-500"
+    },
+    {
+      title: "Success Rate",
+      value: "95.2%",
+      icon: PieChart,
+      change: "+4.3%",
+      color: "text-purple-500"
     }
-  }, [user, navigate]);
-
-  // Return empty if user is not logged in (will redirect)
-  if (!user) {
-    return null;
-  }
+  ];
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex flex-col items-center justify-center text-center mb-12">
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 neon-text">
-          VoiceAgent Weave
-        </h1>
-        <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl">
-          Create powerful AI voice agents and deploy them anywhere with a simple embed code.
-        </p>
+    <div className="container mx-auto px-4 py-6 space-y-8">
+      <motion.div
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        variants={fadeIn}
+        className="flex flex-col gap-6"
+      >
+        <h1 className="text-4xl font-bold neon-text">Dashboard</h1>
         
-        <div className="flex flex-wrap gap-4 mt-8 justify-center">
-          <Button size="lg" onClick={() => navigate('/agents/create')} className="pulse-glow">
-            Create Your First Agent
-          </Button>
-          <Button size="lg" variant="outline" onClick={() => navigate('/agents')}>
-            View My Agents
-          </Button>
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {stats.map((stat, index) => (
+            <motion.div
+              key={stat.title}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+            >
+              <Card className="overflow-hidden feature-card">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <stat.icon className={`h-8 w-8 ${stat.color}`} />
+                    <span className={`text-sm font-medium ${
+                      stat.change.startsWith('+') ? 'text-green-500' : 'text-red-500'
+                    }`}>
+                      {stat.change}
+                    </span>
+                  </div>
+                  <div className="space-y-1">
+                    <h3 className="text-2xl font-bold">{stat.value}</h3>
+                    <p className="text-muted-foreground">{stat.title}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
         </div>
-      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-        <Card className="card-gradient">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <MessageCircle className="h-5 w-5 text-primary" />
-              Create
-            </CardTitle>
-            <CardDescription>
-              Build custom voice agents
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            Design AI voice agents with custom instructions, personalities, and knowledge bases.
-          </CardContent>
-        </Card>
+        {/* Tabs */}
+        <Tabs defaultValue="analytics" className="w-full" onValueChange={setActiveTab}>
+          <TabsList className="grid w-full grid-cols-2 mb-8">
+            <TabsTrigger value="analytics" className="text-lg">
+              Analytics
+            </TabsTrigger>
+            <TabsTrigger value="create" className="text-lg">
+              Create Agent
+            </TabsTrigger>
+          </TabsList>
 
-        <Card className="card-gradient">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Code className="h-5 w-5 text-secondary" />
-              Deploy
-            </CardTitle>
-            <CardDescription>
-              Embed on any website
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            Get a simple HTML snippet to add your voice agent to any website in seconds.
-          </CardContent>
-        </Card>
+          <TabsContent 
+            value="analytics" 
+            className="space-y-6"
+          >
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Card className="feature-card">
+                <CardContent className="p-6">
+                  <h3 className="text-xl font-semibold mb-4">Agent Performance</h3>
+                  <div className="h-[300px] flex items-center justify-center text-muted-foreground">
+                    Analytics Charts will be implemented here
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </TabsContent>
 
-        <Card className="card-gradient">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Users className="h-5 w-5 text-accent" />
-              Engage
-            </CardTitle>
-            <CardDescription>
-              Connect with users
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            Provide natural, voice-based interactions powered by Azure OpenAI GPT-4o.
-          </CardContent>
-        </Card>
-
-        <Card className="card-gradient">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <BarChart className="h-5 w-5 text-primary" />
-              Analyze
-            </CardTitle>
-            <CardDescription>
-              Track performance
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            Monitor your agents' interactions, usage, and user satisfaction metrics.
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="mb-12">
-        <h2 className="text-2xl font-bold mb-6">How It Works</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="flex flex-col items-center text-center p-4">
-            <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mb-4">
-              <span className="text-lg font-bold text-primary">1</span>
-            </div>
-            <h3 className="text-lg font-semibold mb-2">Create Your Agent</h3>
-            <p className="text-muted-foreground">Define your agent's personality, knowledge, and voice characteristics.</p>
-          </div>
-          
-          <div className="flex flex-col items-center text-center p-4">
-            <div className="w-12 h-12 rounded-full bg-secondary/20 flex items-center justify-center mb-4">
-              <span className="text-lg font-bold text-secondary">2</span>
-            </div>
-            <h3 className="text-lg font-semibold mb-2">Copy Embed Code</h3>
-            <p className="text-muted-foreground">Get a customizable HTML snippet for your voice agent.</p>
-          </div>
-          
-          <div className="flex flex-col items-center text-center p-4">
-            <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center mb-4">
-              <span className="text-lg font-bold text-accent">3</span>
-            </div>
-            <h3 className="text-lg font-semibold mb-2">Deploy Anywhere</h3>
-            <p className="text-muted-foreground">Add the code to your website and engage users with voice AI.</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex justify-center">
-        <Button 
-          variant="outline" 
-          onClick={() => window.open('https://azure.microsoft.com/en-us/products/ai-services/openai-service', '_blank')}
-          className="flex items-center gap-2"
-        >
-          Learn about Azure OpenAI
-          <ExternalLink className="h-4 w-4" />
-        </Button>
-      </div>
+          <TabsContent 
+            value="create"
+            className="space-y-6"
+          >
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <AgentForm mode="create" />
+            </motion.div>
+          </TabsContent>
+        </Tabs>
+      </motion.div>
     </div>
   );
 };
 
-export default Index;
+export default Dashboard;

@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -29,16 +28,42 @@ const App = () => (
         <VoiceAgentProvider>
           <Routes>
             <Route path="/" element={<Landing />} />
-            <Route element={<Layout />}>
-              <Route path="/dashboard" element={<Index />} />
-              <Route path="/agents" element={<Agents />} />
-              <Route path="/agents/create" element={<CreateAgent />} />
-              <Route path="/agents/edit/:id" element={<EditAgent />} />
-              <Route path="/agents/preview/:id" element={<AgentPreviewPage />} />
-              <Route path="/history" element={<History />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="*" element={<NotFound />} />
-            </Route>
+            <Route path="/dashboard" element={
+              <Layout>
+                <Index />
+              </Layout>
+            } />
+            <Route path="/agents" element={
+              <Layout>
+                <Agents />
+              </Layout>
+            } />
+            <Route path="/agents/create" element={
+              <Layout>
+                <CreateAgent />
+              </Layout>
+            } />
+            <Route path="/agents/edit/:id" element={
+              <Layout>
+                <EditAgent />
+              </Layout>
+            } />
+            <Route path="/agents/preview/:id" element={
+              <Layout>
+                <AgentPreviewPage />
+              </Layout>
+            } />
+            <Route path="/history" element={
+              <Layout>
+                <History />
+              </Layout>
+            } />
+            <Route path="/settings" element={
+              <Layout>
+                <Settings />
+              </Layout>
+            } />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </VoiceAgentProvider>
       </BrowserRouter>

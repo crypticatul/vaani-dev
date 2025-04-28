@@ -78,6 +78,21 @@
   .glass-panel {
     @apply bg-card/50 backdrop-blur-lg border border-white/10 shadow-xl;
   }
+
+  .dashboard-card {
+    @apply bg-gradient-to-br from-card via-card/90 to-card/70 backdrop-blur-sm border border-primary/20;
+    box-shadow: 0 8px 32px 0 rgba(139, 92, 246, 0.15);
+  }
+  
+  .tab-active {
+    @apply relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 
+           after:bg-primary after:transform after:scale-x-100 after:transition-transform;
+  }
+  
+  .tab-inactive {
+    @apply relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 
+           after:bg-primary after:transform after:scale-x-0 after:transition-transform;
+  }
 }
 
 /* Animation keyframes */
