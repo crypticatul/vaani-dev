@@ -130,14 +130,9 @@ export function useWebRTC({
         console.log('WebSocket connection established with Azure OpenAI');
         setIsProcessing(true);
         
-        // Initial configuration message
-        const initialMessage = {
-          type: "connection_config",
-          stream: true,
-          model: azureOpenAIDeploymentName,
-        };
-        
-        ws.send(JSON.stringify(initialMessage));
+        // Use the correct message type for Azure OpenAI Realtime API
+        // No initial configuration message is needed for Azure OpenAI Realtime v2024-10-01-preview
+        // The API automatically sets up the session when the WebSocket connection is established
       };
       
       ws.onmessage = (event) => {
@@ -145,26 +140,49 @@ export function useWebRTC({
           const response = JSON.parse(event.data);
           console.log('WebSocket message received:', response);
           
-          // Handle transcript
-          if (response.type === "transcript") {
+          // Handle different message types based on Azure OpenAI Realtime API
+          if (response.type === "session.created") {
+            console.log("Session created successfully with Azure OpenAI");
+            
+            // Send message to start audio processing
+            const startMessage = {
+              type: "audio_data",
+            };
+            
+            // No need to send JSON, just send audio data directly
+          } else if (response.type === "speech.interim") {
+            // Handle interim transcription results
             const text = response.text || '';
             setTranscript(text);
             if (onTranscript) {
-              onTranscript(text, response.is_final || false);
+              onTranscript(text, false);
             }
-          }
-          
-          // Handle AI response
-          if (response.type === "generation") {
+          } else if (response.type === "speech.final") {
+            // Handle final transcription results
             const text = response.text || '';
+            setTranscript(text);
+            if (onTranscript) {
+              onTranscript(text, true);
+            }
+          } else if (response.type === "response.partial") {
+            // Handle partial AI response
+            const text = response.content || '';
             setAIResponse(text);
             if (onAIResponse) {
-              onAIResponse(text, response.is_final || false);
+              onAIResponse(text, false);
             }
-            
-            if (response.is_final) {
-              setIsProcessing(false);
+          } else if (response.type === "response.complete") {
+            // Handle complete AI response
+            const text = response.content || '';
+            setAIResponse(text);
+            if (onAIResponse) {
+              onAIResponse(text, true);
             }
+            setIsProcessing(false);
+          } else if (response.type === "error") {
+            console.error('WebSocket error response:', response.error);
+            toast.error(response.error?.message || "An error occurred with the voice service");
+            stopListening();
           }
           
         } catch (error) {

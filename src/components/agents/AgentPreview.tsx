@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
-// Azure OpenAI credentials - In production, these would be stored in a more secure way
+// Azure OpenAI credentials
 const AZURE_OPENAI_API_KEY = "c7879076e2904bc9810da5a78dfe5076";
 const AZURE_OPENAI_ENDPOINT = "https://cognitiev2.openai.azure.com/openai/realtime?api-version=2024-10-01-preview&deployment=gpt-4o-mini-realtime-preview";
 const AZURE_OPENAI_DEPLOYMENT_NAME = "gpt-4o-mini-realtime-preview";
