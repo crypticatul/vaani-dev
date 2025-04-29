@@ -1,6 +1,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
+import { OpenAIRealtimeWS } from 'openai/beta/realtime/ws';
 
 interface UseWebRTCProps {
   azureOpenAIApiKey?: string;
@@ -28,7 +29,7 @@ export function useWebRTC({
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const micStreamRef = useRef<MediaStream | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
-  const webSocketRef = useRef<WebSocket | null>(null);
+  const realtimeClientRef = useRef<any>(null);
   
   const startListening = async () => {
     if (!azureOpenAIApiKey || !azureOpenAIEndpoint || !azureOpenAIDeploymentName) {
@@ -71,8 +72,12 @@ export function useWebRTC({
       
       // Handle audio data
       mediaRecorder.ondataavailable = (event) => {
-        if (webSocketRef.current && webSocketRef.current.readyState === WebSocket.OPEN) {
-          webSocketRef.current.send(event.data);
+        if (realtimeClientRef.current && realtimeClientRef.current.socket.readyState === WebSocket.OPEN) {
+          // Send audio data
+          realtimeClientRef.current.send({
+            type: "audio_data",
+            data: event.data,
+          });
         }
       };
       
@@ -103,10 +108,10 @@ export function useWebRTC({
       micStreamRef.current = null;
     }
     
-    // Close WebSocket
-    if (webSocketRef.current) {
-      webSocketRef.current.close();
-      webSocketRef.current = null;
+    // Close WebSocket connection
+    if (realtimeClientRef.current) {
+      realtimeClientRef.current.close();
+      realtimeClientRef.current = null;
     }
     
     // Close audio context
@@ -124,15 +129,55 @@ export function useWebRTC({
       // Connect to Azure OpenAI Realtime API
       const wsUrl = `${azureOpenAIEndpoint}&api-key=${azureOpenAIApiKey}`;
       
+      // Create WebSocket with custom implementation
       const ws = new WebSocket(wsUrl);
+      
+      // Create a simple client to mimic OpenAIRealtimeWS behavior
+      const realtimeClient = {
+        socket: ws,
+        send: (message: any) => {
+          if (ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify(message));
+          }
+        },
+        close: () => {
+          if (ws.readyState === WebSocket.OPEN) {
+            ws.close();
+          }
+        },
+        callbacks: new Map(),
+        on: function(eventType: string, callback: Function) {
+          this.callbacks.set(eventType, callback);
+        }
+      };
+      
+      realtimeClientRef.current = realtimeClient;
       
       ws.onopen = () => {
         console.log('WebSocket connection established with Azure OpenAI');
         setIsProcessing(true);
         
-        // Use the correct message type for Azure OpenAI Realtime API
-        // No initial configuration message is needed for Azure OpenAI Realtime v2024-10-01-preview
-        // The API automatically sets up the session when the WebSocket connection is established
+        // Initialize session with proper format
+        realtimeClient.send({
+          type: "session.update",
+          session: {
+            modalities: ["text", "audio"],
+            model: azureOpenAIDeploymentName,
+          }
+        });
+        
+        // Create conversation message
+        realtimeClient.send({
+          type: "conversation.item.create",
+          item: {
+            type: "message",
+            role: "user",
+            content: [{ type: "input_text", text: "Please assist the user" }],
+          }
+        });
+        
+        // Start response generation
+        realtimeClient.send({ type: "response.create" });
       };
       
       ws.onmessage = (event) => {
@@ -141,48 +186,59 @@ export function useWebRTC({
           console.log('WebSocket message received:', response);
           
           // Handle different message types based on Azure OpenAI Realtime API
-          if (response.type === "session.created") {
-            console.log("Session created successfully with Azure OpenAI");
-            
-            // Send message to start audio processing
-            const startMessage = {
-              type: "audio_data",
-            };
-            
-            // No need to send JSON, just send audio data directly
-          } else if (response.type === "speech.interim") {
-            // Handle interim transcription results
-            const text = response.text || '';
-            setTranscript(text);
-            if (onTranscript) {
-              onTranscript(text, false);
-            }
-          } else if (response.type === "speech.final") {
-            // Handle final transcription results
-            const text = response.text || '';
-            setTranscript(text);
-            if (onTranscript) {
-              onTranscript(text, true);
-            }
-          } else if (response.type === "response.partial") {
-            // Handle partial AI response
-            const text = response.content || '';
-            setAIResponse(text);
-            if (onAIResponse) {
-              onAIResponse(text, false);
-            }
-          } else if (response.type === "response.complete") {
-            // Handle complete AI response
-            const text = response.content || '';
-            setAIResponse(text);
-            if (onAIResponse) {
-              onAIResponse(text, true);
-            }
-            setIsProcessing(false);
-          } else if (response.type === "error") {
-            console.error('WebSocket error response:', response.error);
-            toast.error(response.error?.message || "An error occurred with the voice service");
-            stopListening();
+          switch(response.type) {
+            case "session.created":
+              console.log("Session created successfully with Azure OpenAI", response.session);
+              break;
+              
+            case "response.audio_transcript.delta":
+              // Handle interim transcription results
+              const transcriptText = response.delta || '';
+              setTranscript(prev => prev + transcriptText);
+              if (onTranscript) {
+                onTranscript(transcriptText, false);
+              }
+              break;
+              
+            case "response.text.delta":
+              // Handle partial AI response
+              const responseText = response.delta || '';
+              setAIResponse(prev => prev + responseText);
+              if (onAIResponse) {
+                onAIResponse(responseText, false);
+              }
+              break;
+              
+            case "response.text.done":
+              // Final transcript
+              if (onTranscript && transcript) {
+                onTranscript(transcript, true);
+              }
+              break;
+              
+            case "response.done":
+              // Complete AI response
+              if (onAIResponse && aiResponse) {
+                onAIResponse(aiResponse, true);
+              }
+              setIsProcessing(false);
+              break;
+              
+            case "error":
+              console.error('WebSocket error response:', response.error);
+              toast.error(response.error?.message || "An error occurred with the voice service");
+              stopListening();
+              break;
+              
+            default:
+              // Handle other response types
+              console.log('Unhandled response type:', response.type);
+          }
+          
+          // If there's a registered callback for this event type, call it
+          const callback = realtimeClient.callbacks.get(response.type);
+          if (callback) {
+            callback(response);
           }
           
         } catch (error) {
@@ -203,8 +259,6 @@ export function useWebRTC({
           stopListening();
         }
       };
-      
-      webSocketRef.current = ws;
     } catch (error) {
       console.error('Error setting up WebSocket:', error);
       toast.error("Failed to connect to Azure OpenAI");
