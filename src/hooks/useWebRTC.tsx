@@ -6,6 +6,7 @@ interface UseWebRTCProps {
   azureOpenAIApiKey?: string;
   azureOpenAIEndpoint?: string;
   azureOpenAIApiVersion?: string;
+  azureOpenAIDeploymentName?: string;
   onTranscript?: (text: string, isFinal: boolean) => void;
   onAIResponse?: (text: string, isFinal: boolean) => void;
 }
@@ -14,6 +15,7 @@ export function useWebRTC({
   azureOpenAIApiKey,
   azureOpenAIEndpoint,
   azureOpenAIApiVersion,
+  azureOpenAIDeploymentName,
   onTranscript,
   onAIResponse,
 }: UseWebRTCProps) {
@@ -29,7 +31,7 @@ export function useWebRTC({
   const webSocketRef = useRef<WebSocket | null>(null);
   
   const startListening = async () => {
-    if (!azureOpenAIApiKey || !azureOpenAIEndpoint) {
+    if (!azureOpenAIApiKey || !azureOpenAIEndpoint || !azureOpenAIDeploymentName) {
       toast.error("Azure OpenAI credentials are required");
       return;
     }
@@ -118,96 +120,78 @@ export function useWebRTC({
   };
   
   const setupWebSocket = () => {
-    // This is a mock implementation since we don't have the actual Azure OpenAI WebRTC endpoint
-    // In a real implementation, you would connect to the Azure OpenAI realtime API endpoint
-    
-    const mockWebSocket = {
-      readyState: WebSocket.OPEN,
-      send: (data: any) => {
-        // Simulate processing audio
+    try {
+      // Connect to Azure OpenAI Realtime API
+      const wsUrl = `${azureOpenAIEndpoint}&api-key=${azureOpenAIApiKey}`;
+      
+      const ws = new WebSocket(wsUrl);
+      
+      ws.onopen = () => {
+        console.log('WebSocket connection established with Azure OpenAI');
         setIsProcessing(true);
         
-        // Simulate transcription after a short delay
-        setTimeout(() => {
-          const mockTranscript = "This is a simulated transcript from Azure OpenAI.";
-          setTranscript(mockTranscript);
-          if (onTranscript) {
-            onTranscript(mockTranscript, true);
+        // Initial configuration message
+        const initialMessage = {
+          type: "connection_config",
+          stream: true,
+          model: azureOpenAIDeploymentName,
+        };
+        
+        ws.send(JSON.stringify(initialMessage));
+      };
+      
+      ws.onmessage = (event) => {
+        try {
+          const response = JSON.parse(event.data);
+          console.log('WebSocket message received:', response);
+          
+          // Handle transcript
+          if (response.type === "transcript") {
+            const text = response.text || '';
+            setTranscript(text);
+            if (onTranscript) {
+              onTranscript(text, response.is_final || false);
+            }
           }
           
-          // Simulate AI response
-          setTimeout(() => {
-            const mockResponse = "This is a simulated AI response from Azure OpenAI's GPT-4o Realtime API.";
-            setAIResponse(mockResponse);
+          // Handle AI response
+          if (response.type === "generation") {
+            const text = response.text || '';
+            setAIResponse(text);
             if (onAIResponse) {
-              onAIResponse(mockResponse, true);
+              onAIResponse(text, response.is_final || false);
             }
-            setIsProcessing(false);
-          }, 1000);
-        }, 500);
-      },
-      close: () => {
-        console.log('WebSocket closed');
-      }
-    } as unknown as WebSocket;
-    
-    webSocketRef.current = mockWebSocket;
-    
-    // In a real implementation, you would have code like this:
-    /*
-    const wsUrl = `${azureOpenAIEndpoint}/openai/gpt-4o-realtime/completions?api-version=${azureOpenAIApiVersion}`;
-    
-    const ws = new WebSocket(wsUrl);
-    
-    ws.onopen = () => {
-      console.log('WebSocket connection established');
+            
+            if (response.is_final) {
+              setIsProcessing(false);
+            }
+          }
+          
+        } catch (error) {
+          console.error('Error parsing WebSocket message:', error);
+        }
+      };
       
-      // Send initial configuration
-      ws.send(JSON.stringify({
-        type: 'config',
-        api_key: azureOpenAIApiKey,
-      }));
-    };
-    
-    ws.onmessage = (event) => {
-      try {
-        const response = JSON.parse(event.data);
-        
-        if (response.type === 'transcript') {
-          setTranscript(response.text);
-          if (onTranscript) {
-            onTranscript(response.text, response.is_final);
-          }
-        }
-        
-        if (response.type === 'response') {
-          setAIResponse(response.text);
-          if (onAIResponse) {
-            onAIResponse(response.text, response.is_final);
-          }
-        }
-        
-      } catch (error) {
-        console.error('Error parsing WebSocket message:', error);
-      }
-    };
-    
-    ws.onerror = (error) => {
-      console.error('WebSocket error:', error);
-      toast.error("Connection error");
-      stopListening();
-    };
-    
-    ws.onclose = () => {
-      console.log('WebSocket connection closed');
-      if (isListening) {
-        toast.info("Connection closed");
+      ws.onerror = (error) => {
+        console.error('WebSocket error:', error);
+        toast.error("Connection error with Azure OpenAI");
         stopListening();
-      }
-    };
-    
-    webSocketRef.current = ws;
-    */
+      };
+      
+      ws.onclose = () => {
+        console.log('WebSocket connection closed');
+        if (isListening) {
+          toast.info("Connection closed");
+          stopListening();
+        }
+      };
+      
+      webSocketRef.current = ws;
+    } catch (error) {
+      console.error('Error setting up WebSocket:', error);
+      toast.error("Failed to connect to Azure OpenAI");
+      stopListening();
+    }
   };
   
   // Clean up resources on unmount

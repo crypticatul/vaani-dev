@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/layout/Layout";
 import { VoiceAgentProvider } from "./hooks/useVoiceAgent";
 
@@ -30,7 +30,7 @@ const App = () => (
         <VoiceAgentProvider>
           <Routes>
             <Route path="/" element={<Landing />} />
-            <Route path="/login" element={<Navigate to="/dashboard" />} /> {/* Redirect login to dashboard */}
+            <Route path="/login" element={<Index />} /> {/* Redirect login to dashboard */}
             <Route path="/dashboard" element={
               <Layout>
                 <Index />

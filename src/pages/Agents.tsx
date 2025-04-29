@@ -1,27 +1,17 @@
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
 import { useVoiceAgent } from '@/hooks/useVoiceAgent';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Plus, Search } from 'lucide-react';
 import AgentCard from '@/components/agents/AgentCard';
 import { Skeleton } from '@/components/ui/skeleton';
-import { toast } from 'sonner';
 
 const Agents = () => {
-  const { user } = useAuth();
   const navigate = useNavigate();
   const { agents, loading } = useVoiceAgent();
   const [searchTerm, setSearchTerm] = useState('');
-  
-  useEffect(() => {
-    // If user is not logged in, redirect to login
-    if (!user) {
-      navigate('/login');
-    }
-  }, [user, navigate]);
   
   // Filter agents based on search term
   const filteredAgents = agents.filter(agent => 
@@ -32,11 +22,6 @@ const Agents = () => {
   const handleCreateAgent = () => {
     navigate('/agents/create');
   };
-  
-  // If user is not logged in, don't render the content
-  if (!user) {
-    return null;
-  }
 
   return (
     <div className="container mx-auto">

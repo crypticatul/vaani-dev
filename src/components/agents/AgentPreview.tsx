@@ -6,7 +6,12 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Button } from '@/components/ui/button';
 import { Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
+
+// Azure OpenAI credentials - In production, these would be stored in a more secure way
+const AZURE_OPENAI_API_KEY = "c7879076e2904bc9810da5a78dfe5076";
+const AZURE_OPENAI_ENDPOINT = "https://cognitiev2.openai.azure.com/openai/realtime?api-version=2024-10-01-preview&deployment=gpt-4o-mini-realtime-preview";
+const AZURE_OPENAI_DEPLOYMENT_NAME = "gpt-4o-mini-realtime-preview";
+const AZURE_OPENAI_API_VERSION = "2024-10-01-preview";
 
 interface AgentPreviewProps {
   agent: Agent;
@@ -15,11 +20,6 @@ interface AgentPreviewProps {
 const AgentPreview = ({ agent }: AgentPreviewProps) => {
   const [isMuted, setIsMuted] = useState(false);
   const [messages, setMessages] = useState<{type: 'user' | 'agent', text: string}[]>([]);
-  
-  // Get the API key, endpoint, and version from environment variables (or use mock values for demo)
-  const apiKey = 'MOCK_API_KEY';
-  const endpoint = 'MOCK_ENDPOINT';
-  const apiVersion = 'MOCK_API_VERSION';
   
   // Handle transcript updates
   const handleTranscript = (text: string, isFinal: boolean) => {
@@ -44,9 +44,10 @@ const AgentPreview = ({ agent }: AgentPreviewProps) => {
     startListening,
     stopListening,
   } = useWebRTC({
-    azureOpenAIApiKey: apiKey,
-    azureOpenAIEndpoint: endpoint, 
-    azureOpenAIApiVersion: apiVersion,
+    azureOpenAIApiKey: AZURE_OPENAI_API_KEY,
+    azureOpenAIEndpoint: AZURE_OPENAI_ENDPOINT,
+    azureOpenAIApiVersion: AZURE_OPENAI_API_VERSION,
+    azureOpenAIDeploymentName: AZURE_OPENAI_DEPLOYMENT_NAME,
     onTranscript: handleTranscript,
     onAIResponse: handleAIResponse,
   });
