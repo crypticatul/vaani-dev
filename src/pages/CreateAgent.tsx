@@ -1,27 +1,15 @@
 
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
 import AgentForm from '@/components/agents/AgentForm';
+import { motion } from 'framer-motion';
 
 const CreateAgent = () => {
-  const { user } = useAuth();
-  const navigate = useNavigate();
-  
-  useEffect(() => {
-    // If user is not logged in, redirect to login
-    if (!user) {
-      navigate('/login');
-    }
-  }, [user, navigate]);
-  
-  // If user is not logged in, don't render the content
-  if (!user) {
-    return null;
-  }
-
   return (
-    <div className="container mx-auto">
+    <motion.div 
+      className="container mx-auto"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2 neon-text">Create Voice Agent</h1>
         <p className="text-muted-foreground">
@@ -30,7 +18,7 @@ const CreateAgent = () => {
       </div>
       
       <AgentForm mode="create" />
-    </div>
+    </motion.div>
   );
 };
 
