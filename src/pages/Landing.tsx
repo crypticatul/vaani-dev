@@ -1,8 +1,7 @@
-
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, Sparkles, Shield, Zap, Mic, VoiceIcon, Bot } from 'lucide-react';
+import { ChevronDown, Sparkles, Shield, Zap, Mic, Bot } from 'lucide-react';
 
 const Landing = () => {
   const navigate = useNavigate();
