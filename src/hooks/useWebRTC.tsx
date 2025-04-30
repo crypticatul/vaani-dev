@@ -1,7 +1,6 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
-import { OpenAIRealtimeWS } from 'openai/beta/realtime/ws';
 
 interface UseWebRTCProps {
   azureOpenAIApiKey?: string;
@@ -43,15 +42,22 @@ export function useWebRTC({
       setAIResponse('');
       
       // Get microphone access
-      const micStream = await navigator.mediaDevices.getUserMedia({ 
-        audio: {
-          echoCancellation: true,
-          noiseSuppression: true,
-          autoGainControl: true,
-        } 
-      });
-      
-      micStreamRef.current = micStream;
+      let micStream: MediaStream;
+      try {
+        // Request microphone access directly
+        micStream = await navigator.mediaDevices.getUserMedia({ 
+          audio: {
+            echoCancellation: true,
+            noiseSuppression: true,
+            autoGainControl: true,
+          } 
+        });
+        micStreamRef.current = micStream;
+      } catch (error) {
+        console.error('Microphone access error:', error);
+        setIsListening(false);
+        throw new Error('Microphone access is required for voice interactions');
+      }
       
       // Create audio context
       const audioContext = new AudioContext();
@@ -71,13 +77,14 @@ export function useWebRTC({
       mediaRecorder.start(250);
       
       // Handle audio data
-      mediaRecorder.ondataavailable = (event) => {
-        if (realtimeClientRef.current && realtimeClientRef.current.socket.readyState === WebSocket.OPEN) {
-          // Send audio data
-          realtimeClientRef.current.send({
-            type: "audio_data",
-            data: event.data,
-          });
+      mediaRecorder.ondataavailable = async (event) => {
+        if (realtimeClientRef.current) {
+          const ws = realtimeClientRef.current.socket;
+          if (ws.readyState === WebSocket.OPEN) {
+            // Send raw audio bytes
+            const arrayBuffer = await event.data.arrayBuffer();
+            ws.send(arrayBuffer);
+          }
         }
       };
       
@@ -127,10 +134,11 @@ export function useWebRTC({
   const setupWebSocket = () => {
     try {
       // Connect to Azure OpenAI Realtime API
-      const wsUrl = `${azureOpenAIEndpoint}&api-key=${azureOpenAIApiKey}`;
+      const wsUrl = `${azureOpenAIEndpoint.replace(/^http/, 'ws')}/openai/realtime?api-version=${azureOpenAIApiVersion}&deployment=${azureOpenAIDeploymentName}&api-key=${azureOpenAIApiKey}`;
       
       // Create WebSocket with custom implementation
       const ws = new WebSocket(wsUrl);
+      ws.binaryType = 'arraybuffer';
       
       // Create a simple client to mimic OpenAIRealtimeWS behavior
       const realtimeClient = {

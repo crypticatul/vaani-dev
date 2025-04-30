@@ -1,9 +1,8 @@
-
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&display=swap');
 
 @layer base {
   :root {
@@ -37,13 +36,11 @@
 
     --radius: 0.5rem;
   }
-}
 
-@layer base {
   * {
     @apply border-border;
   }
-  
+
   body {
     @apply bg-background text-foreground antialiased;
     font-family: 'Montserrat', sans-serif;
@@ -64,17 +61,17 @@
 @layer components {
   .neon-text {
     @apply font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#00FFC2] via-[#00B4DB] to-[#BD00FF];
-    text-shadow: 
+    text-shadow:
       0 0 5px rgba(0, 255, 194, 0.5),
       0 0 10px rgba(0, 180, 219, 0.3),
       0 0 15px rgba(189, 0, 255, 0.2);
   }
-  
+
   .card-gradient {
     @apply bg-gradient-to-br from-card via-card/90 to-card/70 backdrop-blur-sm border border-primary/20;
     box-shadow: 0 8px 32px 0 rgba(111, 78, 246, 0.15);
   }
-  
+
   .glass-panel {
     @apply bg-card/50 backdrop-blur-lg border border-white/10 shadow-xl;
   }
@@ -83,45 +80,45 @@
     @apply bg-gradient-to-br from-card via-card/90 to-card/70 backdrop-blur-sm border border-primary/20;
     box-shadow: 0 8px 32px 0 rgba(111, 78, 246, 0.15);
   }
-  
+
   .tab-active {
-    @apply relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 
+    @apply relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5
            after:bg-primary after:transform after:scale-x-100 after:transition-transform;
   }
-  
+
   .tab-inactive {
-    @apply relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 
+    @apply relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5
            after:bg-primary after:transform after:scale-x-0 after:transition-transform;
   }
-  
+
   .sound-wave {
     @apply flex items-center gap-0.5 h-8;
   }
-  
+
   .sound-wave span {
     @apply w-1 bg-primary rounded-full;
     animation: waveform 1.5s ease-in-out infinite;
   }
-  
+
   .sound-wave span:nth-child(1) { animation-delay: -0.5s; }
   .sound-wave span:nth-child(2) { animation-delay: -0.4s; }
   .sound-wave span:nth-child(3) { animation-delay: -0.3s; }
   .sound-wave span:nth-child(4) { animation-delay: -0.2s; }
   .sound-wave span:nth-child(5) { animation-delay: -0.1s; }
-  
+
   .neo-glow {
     box-shadow: 0 0 15px 2px theme('colors.primary.DEFAULT / 30%'),
                 0 0 30px 5px theme('colors.primary.DEFAULT / 10%');
   }
-  
+
   .neo-blur {
     @apply backdrop-blur-lg bg-black/40 border border-primary/30;
   }
-  
+
   .text-glow {
     text-shadow: 0 0 10px theme('colors.primary.DEFAULT / 70%');
   }
-  
+
   .hero-gradient-bg {
     background: radial-gradient(
       circle at 50% 50%,
@@ -132,9 +129,9 @@
   }
 
   .section-divider {
-    background: linear-gradient(90deg, 
-      rgba(111, 78, 246, 0) 0%, 
-      rgba(111, 78, 246, 0.5) 50%, 
+    background: linear-gradient(90deg,
+      rgba(111, 78, 246, 0) 0%,
+      rgba(111, 78, 246, 0.5) 50%,
       rgba(111, 78, 246, 0) 100%
     );
     height: 1px;
@@ -157,7 +154,7 @@
 
   .gradient-btn {
     @apply relative overflow-hidden transition-all duration-300;
-    background: linear-gradient(135deg, 
+    background: linear-gradient(135deg,
       #00FFC2 0%,
       #00B4DB 50%,
       #BD00FF 100%
@@ -244,7 +241,7 @@
 
 .sound-wave-bg {
   @apply fixed inset-0 pointer-events-none opacity-10;
-  background-image: 
+  background-image:
     radial-gradient(circle at 20% 30%, rgba(0, 255, 194, 0.05) 0%, transparent 50%),
     radial-gradient(circle at 80% 70%, rgba(189, 0, 255, 0.05) 0%, transparent 50%);
 }

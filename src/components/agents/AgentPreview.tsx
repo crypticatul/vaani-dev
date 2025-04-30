@@ -7,10 +7,10 @@ import { Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 // Azure OpenAI credentials
-const AZURE_OPENAI_API_KEY = "c7879076e2904bc9810da5a78dfe5076";
-const AZURE_OPENAI_ENDPOINT = "https://cognitiev2.openai.azure.com/openai/realtime?api-version=2024-10-01-preview&deployment=gpt-4o-mini-realtime-preview";
-const AZURE_OPENAI_DEPLOYMENT_NAME = "gpt-4o-mini-realtime-preview";
-const AZURE_OPENAI_API_VERSION = "2024-10-01-preview";
+const AZURE_OPENAI_API_KEY = import.meta.env.VITE_AZURE_OPENAI_API_KEY;
+const AZURE_OPENAI_ENDPOINT = import.meta.env.VITE_AZURE_OPENAI_ENDPOINT;
+const AZURE_OPENAI_DEPLOYMENT_NAME = import.meta.env.VITE_AZURE_OPENAI_DEPLOYMENT_NAME;
+const AZURE_OPENAI_API_VERSION = import.meta.env.VITE_AZURE_OPENAI_API_VERSION;
 
 interface AgentPreviewProps {
   agent: Agent;
