@@ -34,14 +34,14 @@ interface VoiceAgentProviderProps {
 
 const generateEmbedCode = (agentId: string): string => {
   return `
-<!-- VoiceAgent Weave Embed Code -->
+<!-- Vaani.dev Embed Code -->
 <script>
   (function(w, d, s, o) {
     var j = d.createElement(s);
     j.async = true;
-    j.src = 'https://cdn.voiceagent-weave.com/widget.js';
-    j.onload = function() {
-      w.VoiceAgentWeave.init({
+j.src = 'https://cdn.vaani.dev/widget.js';
+      j.onload = function() {
+      w.VaaniDev.init({
         agentId: '${agentId}',
         position: 'bottom-right'
       });
@@ -50,7 +50,7 @@ const generateEmbedCode = (agentId: string): string => {
     f.parentNode.insertBefore(j, f);
   })(window, document, 'script');
 </script>
-<!-- End VoiceAgent Weave Embed Code -->
+<!-- End Vaani.dev Embed Code -->
   `;
 };
 

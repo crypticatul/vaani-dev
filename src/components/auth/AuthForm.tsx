@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Loader2 } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 // Form validation schemas
 const loginSchema = z.object({
@@ -68,12 +69,12 @@ const AuthForm = () => {
   };
   
   return (
-    <div className="max-w-md w-full mx-auto">
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-md w-full mx-auto">
       <Card className="card-gradient">
         <CardHeader className="space-y-2">
-          <CardTitle className="text-2xl text-center neon-text">VoiceAgent Weave</CardTitle>
+          <CardTitle className="text-2xl text-center neon-text">Vaani.dev</CardTitle>
           <CardDescription className="text-center">
-            Create and deploy AI voice agents anywhere
+            Vaani.dev is powered by cutting-edge AI from Cognitiev.com and is a brand of Kritrima AI Technologies Private Limited.
           </CardDescription>
         </CardHeader>
         
@@ -222,7 +223,7 @@ const AuthForm = () => {
           </div>
         </CardFooter>
       </Card>
-    </div>
+    </motion.div>
   );
 };
 

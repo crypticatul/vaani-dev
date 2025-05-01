@@ -1,8 +1,8 @@
 
 {
-  "name": "VoiceAgent Weave",
-  "short_name": "VoiceAgent",
-  "description": "Create and deploy AI voice agents powered by Azure OpenAI",
+  "name": "Vaani.dev",
+  "short_name": "Vaani.dev",
+  "description": "Vaani.dev is powered by cutting-edge AI from Cognitiev.com and is a brand of Kritrima AI Technologies Private Limited.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#13131A",

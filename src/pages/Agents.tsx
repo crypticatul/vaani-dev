@@ -1,5 +1,6 @@
 
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useVoiceAgent } from '@/hooks/useVoiceAgent';
 import { Button } from '@/components/ui/button';
@@ -24,7 +25,7 @@ const Agents = () => {
   };
 
   return (
-    <div className="container mx-auto">
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="container mx-auto">
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4">
         <div>
           <h1 className="text-3xl font-bold mb-2 neon-text">My Voice Agents</h1>
@@ -95,7 +96,7 @@ const Agents = () => {
           </div>
         )
       )}
-    </div>
+  </motion.div>
   );
 };
 

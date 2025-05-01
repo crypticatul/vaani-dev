@@ -38,8 +38,8 @@ const Navbar = () => {
         </SidebarTrigger>
         
         <div className="flex-1">
-          <span className="hidden md:inline-block text-xl font-bold neon-text">
-            VoiceAgent Weave
+<span className="hidden md:inline-block text-xl font-bold neon-text">
+            Vaani.dev
           </span>
         </div>
         

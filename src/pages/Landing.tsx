@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, Sparkles, Shield, Zap, Mic, Bot } from 'lucide-react';
+import { ChevronDown, Sparkles, Shield, Zap, Mic, Bot, Copy, Globe } from 'lucide-react';
 
 const Landing = () => {
   const navigate = useNavigate();
@@ -92,7 +92,7 @@ const Landing = () => {
             {[...Array(12)].map((_, i) => (
               <motion.span
                 key={i}
-                className="w-1 bg-primary rounded-full"
+                className={`w-1 rounded-full ${i % 2 === 0 ? 'bg-primary' : 'bg-[#BD00FF]'}`}
                 initial={{ height: 5 }}
                 animate={{ 
                   height: [5, 30, 5],
@@ -130,18 +130,18 @@ const Landing = () => {
             </div>
           </motion.div>
 
-          <motion.h1
+<motion.h1
             className="text-6xl md:text-7xl lg:text-8xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-[#00FFC2] via-[#00B4DB] to-[#BD00FF]"
             variants={itemVariants}
           >
-            Voice AI Agent Creator
+            Vaani.dev
           </motion.h1>
           
-          <motion.p
+<motion.p
             className="text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl mx-auto"
             variants={itemVariants}
           >
-            Create sophisticated AI voice agents that understand, learn, and engage naturally with your users.
+           Create sophisticated AI voice agents that understand, learn, and engage naturally with your users.
           </motion.p>
           
           <motion.div variants={itemVariants}>
@@ -196,6 +196,46 @@ const Landing = () => {
               </motion.div>
             ))}
           </div>
+
+          {/* How To Get Started Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            viewport={{ once: true }}
+            className="text-center mb-16 mt-24"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-glow">
+              How To Get Started?
+            </h2>
+            <div className="section-divider mx-auto" />
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            viewport={{ once: true }}
+          >
+            <div className="bg-gradient-to-br from-card/50 via-card/40 to-card/30 backdrop-blur-md border border-primary/20 p-6 rounded-xl">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="feature-card p-6 rounded-xl">
+                  <Bot className="w-12 h-12 text-primary mb-4" />
+                  <h3 className="text-xl font-semibold mb-2">Create Agent</h3>
+                  <p className="text-gray-400">Easily configure your AI voice agent with a few clicks.</p>
+                </div>
+                <div className="feature-card p-6 rounded-xl">
+                  <Copy className="w-12 h-12 text-primary mb-4" />
+                  <h3 className="text-xl font-semibold mb-2">Copy Embed Code</h3>
+                  <p className="text-gray-400">Grab the provided snippet to seamlessly integrate.</p>
+                </div>
+                <div className="feature-card p-6 rounded-xl">
+                  <Globe className="w-12 h-12 text-primary mb-4" />
+                  <h3 className="text-xl font-semibold mb-2">Paste to Your Website</h3>
+                  <p className="text-gray-400">Paste the embed code into your site and go live.</p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
 
           {/* Demo View Section */}
           <motion.div

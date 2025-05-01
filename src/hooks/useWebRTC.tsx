@@ -198,6 +198,27 @@ export function useWebRTC({
             case "session.created":
               console.log("Session created successfully with Azure OpenAI", response.session);
               break;
+
+            case "session.updated":
+              console.log("Session updated with Azure OpenAI", response.session);
+              break;
+
+            case "conversation.item.created":
+              console.log("Conversation item created", response.item);
+              break;
+
+            case "response.created":
+              console.log("Response created", response.response);
+              // Initialize new AI response
+              setAIResponse('');
+              if (onAIResponse) {
+                onAIResponse('', false);
+              }
+              break;
+
+            case "rate_limits.updated":
+              console.log("Rate limits updated", response.rate_limits);
+              break;
               
             case "response.audio_transcript.delta":
               // Handle interim transcription results
@@ -232,15 +253,48 @@ export function useWebRTC({
               setIsProcessing(false);
               break;
               
+            case "response.output_item.added":
+              // Handle output item added
+              console.log("Response output item added", response.item);
+              break;
+
+            case "response.content_part.added":
+              // Handle content part added
+              const contentPart = response.item?.text ?? response.delta ?? '';
+              if (!contentPart) {
+                console.debug("Unexpected content_part format", response);
+              }
+              setAIResponse(prev => prev + contentPart);
+              if (onAIResponse) {
+                onAIResponse(contentPart, false);
+              }
+              break;
+
+            case "response.audio.delta":
+              // Handle streaming audio chunk
+              const audioPayload = response.item?.payload ?? response.payload ?? '';
+              if (!audioPayload) {
+                console.debug("Unexpected audio.delta format", response);
+              } else if (audioContextRef.current) {
+                const audioData = Uint8Array.from(atob(audioPayload), c => c.charCodeAt(0)).buffer;
+                audioContextRef.current.decodeAudioData(audioData).then(decodedData => {
+                  const source = audioContextRef.current.createBufferSource();
+                  source.buffer = decodedData;
+                  source.connect(audioContextRef.current.destination);
+                  source.start();
+                }).catch(err => console.error('Error decoding audio data:', err));
+              }
+              break;
+
             case "error":
               console.error('WebSocket error response:', response.error);
               toast.error(response.error?.message || "An error occurred with the voice service");
               stopListening();
               break;
-              
+            
             default:
-              // Handle other response types
-              console.log('Unhandled response type:', response.type);
+              // No action for other response types
+              break;
           }
           
           // If there's a registered callback for this event type, call it

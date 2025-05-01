@@ -46,7 +46,7 @@ const Sidebar = () => {
     <SidebarComponent>
       <SidebarHeader className="py-4">
         <div className="px-4">
-          <h3 className="text-lg font-bold neon-text">VoiceAgent Weave</h3>
+          <h3 className="text-lg font-bold neon-text">Vaani.dev</h3>
         </div>
         <div className="px-2 pt-4">
           <Button 
@@ -80,7 +80,10 @@ const Sidebar = () => {
       </SidebarContent>
       <SidebarFooter className="py-4 px-4">
         <div className="text-xs text-muted-foreground">
-          VoiceAgent Weave © {new Date().getFullYear()}
+          Vaani.dev © {new Date().getFullYear()}
+        </div>
+        <div className="text-xs text-muted-foreground mt-1">
+          Powered by cutting-edge AI from Cognitiev.com. A brand of Kritrima AI Technologies Private Limited.
         </div>
       </SidebarFooter>
     </SidebarComponent>

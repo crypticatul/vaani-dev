@@ -7,8 +7,7 @@ const Login = () => {
       <AuthForm />
       
       <p className="text-sm text-muted-foreground mt-8 text-center max-w-md">
-        VoiceAgent Weave allows you to create and deploy Azure OpenAI-powered
-        voice agents directly on your website.
+        Vaani.dev is powered by cutting-edge AI from Cognitiev.com and is a brand of Kritrima AI Technologies Private Limited.
       </p>
     </div>
   );
