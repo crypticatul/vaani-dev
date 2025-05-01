@@ -1,7 +1,9 @@
+
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, Sparkles, Shield, Zap, Mic, Bot, Copy, Globe } from 'lucide-react';
+import Logo from '@/components/common/Logo';
 
 const Landing = () => {
   const navigate = useNavigate();
@@ -130,14 +132,15 @@ const Landing = () => {
             </div>
           </motion.div>
 
-<motion.h1
-            className="text-6xl md:text-7xl lg:text-8xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-[#00FFC2] via-[#00B4DB] to-[#BD00FF]"
+          {/* Replace the text with the logo */}
+          <motion.div
+            className="mb-6"
             variants={itemVariants}
           >
-            Vaani.dev
-          </motion.h1>
+            <Logo size="large" animated={true} className="mx-auto" />
+          </motion.div>
           
-<motion.p
+          <motion.p
             className="text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl mx-auto"
             variants={itemVariants}
           >
