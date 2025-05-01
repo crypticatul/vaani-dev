@@ -2,11 +2,20 @@
 import { useState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 
+// Define allowed Azure OpenAI model types for TypeScript
+type AzureOpenAIModelType = 
+  | "gpt-4o-mini-realtime-preview" 
+  | "gpt-4o-realtime-preview" 
+  | "gpt-4o-realtime-preview-2024-10-01"
+  | "gpt-4o-realtime-preview-2024-12-17"
+  | "gpt-4o-mini-realtime-preview-2024-12-17";
+
 interface UseWebRTCProps {
   azureOpenAIApiKey?: string;
   azureOpenAIEndpoint?: string;
   azureOpenAIApiVersion?: string;
   azureOpenAIDeploymentName?: string;
+  azureOpenAIModel?: AzureOpenAIModelType;
   onTranscript?: (text: string, isFinal: boolean) => void;
   onAIResponse?: (text: string, isFinal: boolean) => void;
 }
@@ -16,6 +25,7 @@ export function useWebRTC({
   azureOpenAIEndpoint,
   azureOpenAIApiVersion,
   azureOpenAIDeploymentName,
+  azureOpenAIModel = "gpt-4o-realtime-preview",
   onTranscript,
   onAIResponse,
 }: UseWebRTCProps) {
@@ -29,6 +39,27 @@ export function useWebRTC({
   const micStreamRef = useRef<MediaStream | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const realtimeClientRef = useRef<any>(null);
+  
+  // Helper for detecting supported MIME types
+  const getSupportedMimeType = () => {
+    const possibleTypes = [
+      'audio/webm',
+      'audio/webm;codecs=opus',
+      'audio/ogg;codecs=opus',
+      'audio/mp4',
+      'audio/wav'
+    ];
+    
+    for (const type of possibleTypes) {
+      if (MediaRecorder.isTypeSupported(type)) {
+        console.log(`Browser supports MIME type: ${type}`);
+        return type;
+      }
+    }
+    
+    console.error('No supported MIME types found');
+    return 'audio/webm'; // Default fallback
+  };
   
   const startListening = async () => {
     if (!azureOpenAIApiKey || !azureOpenAIEndpoint || !azureOpenAIDeploymentName) {
@@ -63,9 +94,10 @@ export function useWebRTC({
       const audioContext = new AudioContext();
       audioContextRef.current = audioContext;
       
-      // Create media recorder
+      // Create media recorder with best supported MIME type
+      const supportedMimeType = getSupportedMimeType();
       const mediaRecorder = new MediaRecorder(micStream, {
-        mimeType: 'audio/webm',
+        mimeType: supportedMimeType,
       });
       
       mediaRecorderRef.current = mediaRecorder;
@@ -80,7 +112,7 @@ export function useWebRTC({
       mediaRecorder.ondataavailable = async (event) => {
         if (realtimeClientRef.current) {
           const ws = realtimeClientRef.current.socket;
-          if (ws.readyState === WebSocket.OPEN) {
+          if (ws && ws.readyState === WebSocket.OPEN) {
             // Send raw audio bytes
             const arrayBuffer = await event.data.arrayBuffer();
             ws.send(arrayBuffer);
@@ -133,8 +165,14 @@ export function useWebRTC({
   
   const setupWebSocket = () => {
     try {
+      if (!azureOpenAIDeploymentName) {
+        throw new Error("No deployment name provided");
+      }
+
       // Connect to Azure OpenAI Realtime API
       const wsUrl = `${azureOpenAIEndpoint.replace(/^http/, 'ws')}/openai/realtime?api-version=${azureOpenAIApiVersion}&deployment=${azureOpenAIDeploymentName}&api-key=${azureOpenAIApiKey}`;
+      
+      console.log("Connecting to WebSocket URL:", wsUrl.replace(azureOpenAIApiKey, "[REDACTED]"));
       
       // Create WebSocket with custom implementation
       const ws = new WebSocket(wsUrl);
@@ -170,7 +208,10 @@ export function useWebRTC({
           type: "session.update",
           session: {
             modalities: ["text", "audio"],
-            model: azureOpenAIDeploymentName,
+            model: azureOpenAIModel,
+            voice: {
+              type: "text-to-speech"
+            }
           }
         });
         
@@ -190,6 +231,12 @@ export function useWebRTC({
       
       ws.onmessage = (event) => {
         try {
+          if (event.data instanceof ArrayBuffer) {
+            // This is likely a binary audio chunk
+            console.log("Received binary audio data");
+            return;
+          }
+          
           const response = JSON.parse(event.data);
           console.log('WebSocket message received:', response);
           
@@ -276,13 +323,17 @@ export function useWebRTC({
               if (!audioPayload) {
                 console.debug("Unexpected audio.delta format", response);
               } else if (audioContextRef.current) {
-                const audioData = Uint8Array.from(atob(audioPayload), c => c.charCodeAt(0)).buffer;
-                audioContextRef.current.decodeAudioData(audioData).then(decodedData => {
-                  const source = audioContextRef.current.createBufferSource();
-                  source.buffer = decodedData;
-                  source.connect(audioContextRef.current.destination);
-                  source.start();
-                }).catch(err => console.error('Error decoding audio data:', err));
+                try {
+                  const audioData = Uint8Array.from(atob(audioPayload), c => c.charCodeAt(0)).buffer;
+                  audioContextRef.current.decodeAudioData(audioData).then(decodedData => {
+                    const source = audioContextRef.current.createBufferSource();
+                    source.buffer = decodedData;
+                    source.connect(audioContextRef.current.destination);
+                    source.start();
+                  }).catch(err => console.error('Error decoding audio data:', err));
+                } catch (error) {
+                  console.error('Error processing audio chunk:', error);
+                }
               }
               break;
 
@@ -294,6 +345,7 @@ export function useWebRTC({
             
             default:
               // No action for other response types
+              console.log(`Unhandled message type: ${response.type}`, response);
               break;
           }
           

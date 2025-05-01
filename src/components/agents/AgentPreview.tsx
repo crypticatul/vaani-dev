@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Agent } from '@/hooks/useVoiceAgent';
 import { useWebRTC } from '@/hooks/useWebRTC';
@@ -11,6 +12,7 @@ const AZURE_OPENAI_API_KEY = import.meta.env.VITE_AZURE_OPENAI_API_KEY;
 const AZURE_OPENAI_ENDPOINT = import.meta.env.VITE_AZURE_OPENAI_ENDPOINT;
 const AZURE_OPENAI_DEPLOYMENT_NAME = import.meta.env.VITE_AZURE_OPENAI_DEPLOYMENT_NAME;
 const AZURE_OPENAI_API_VERSION = import.meta.env.VITE_AZURE_OPENAI_API_VERSION;
+const AZURE_OPENAI_MODEL = import.meta.env.VITE_AZURE_OPENAI_MODEL as "gpt-4o-realtime-preview";
 
 interface AgentPreviewProps {
   agent: Agent;
@@ -47,6 +49,7 @@ const AgentPreview = ({ agent }: AgentPreviewProps) => {
     azureOpenAIEndpoint: AZURE_OPENAI_ENDPOINT,
     azureOpenAIApiVersion: AZURE_OPENAI_API_VERSION,
     azureOpenAIDeploymentName: AZURE_OPENAI_DEPLOYMENT_NAME,
+    azureOpenAIModel: AZURE_OPENAI_MODEL,
     onTranscript: handleTranscript,
     onAIResponse: handleAIResponse,
   });
