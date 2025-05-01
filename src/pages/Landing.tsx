@@ -132,13 +132,13 @@ const Landing = () => {
             </div>
           </motion.div>
 
-          {/* Replace the text with the logo */}
-          <motion.div
-            className="mb-6"
+          {/* Title - Restored Vaani.dev headline */}
+          <motion.h1
+            className="text-5xl md:text-6xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary"
             variants={itemVariants}
           >
-            <Logo size="large" animated={true} className="mx-auto" />
-          </motion.div>
+            Vaani.dev
+          </motion.h1>
           
           <motion.p
             className="text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl mx-auto"
