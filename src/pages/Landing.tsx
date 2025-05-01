@@ -117,19 +117,8 @@ const Landing = () => {
           variants={containerVariants}
         >
           {/* Floating Voice Agent Icon */}
-          <motion.div
-            className="mb-8 inline-flex"
-            initial={{ y: 0 }}
-            animate={{ y: [-10, 10, -10] }}
-            transition={{ 
-              duration: 6, 
-              repeat: Infinity, 
-              repeatType: "loop" 
-            }}
-          >
-            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary via-secondary to-purple-500 flex items-center justify-center mx-auto">
-              <Mic className="w-12 h-12 text-white" />
-            </div>
+          <motion.div variants={itemVariants}>
+            <Logo className="mx-auto mb-8" size="xlarge" />
           </motion.div>
 
           {/* Title - Restored Vaani.dev headline */}
@@ -146,6 +135,7 @@ const Landing = () => {
           >
            Create sophisticated AI voice agents that understand, learn, and engage naturally with your users.
           </motion.p>
+          
           
           <motion.div variants={itemVariants}>
             <Button
@@ -270,6 +260,20 @@ const Landing = () => {
       {/* Call to Action */}
       <section className="py-20 bg-gradient-to-br from-black to-card">
         <div className="container mx-auto px-4 text-center">
+          <motion.div
+            className="mb-8 inline-flex"
+            initial={{ y: 0 }}
+            animate={{ y: [-10, 10, -10] }}
+            transition={{
+              duration: 6,
+              repeat: Infinity,
+              repeatType: "loop"
+            }}
+          >
+            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary via-secondary to-purple-500 flex items-center justify-center">
+              <Mic className="w-12 h-12 text-white" />
+            </div>
+          </motion.div>
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}

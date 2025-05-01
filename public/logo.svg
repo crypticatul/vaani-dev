@@ -1,5 +1,5 @@
 
-<svg width="240" height="60" viewBox="0 0 240 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 360 100" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
   <!-- Sound Wave Bars with Animation - Made larger -->
   <g class="sound-wave">
     <rect x="10" y="10" width="8" height="40" rx="4" fill="url(#gradient1)" class="bar bar-1"/>
@@ -15,8 +15,8 @@
   </g>
 
   <!-- वाani Text - Positioned below the sound waves -->
-  <text x="85" y="55" font-family="Orbitron, sans-serif" font-weight="700" font-size="22" class="logo-text">
-    <tspan fill="#F1F0FB" class="glow-effect">वा</tspan><tspan fill="#F1F1F1" class="glow-effect">ani</tspan>
+  <text x="86" y="64" font-family="Orbitron, sans-serif" font-weight="800" font-size="22" class="logo-text">
+    <tspan fill="#F1F0FB" class="glow-effect">VA</tspan><tspan fill="#F1F1F1" class="glow-effect">ANI</tspan>
   </text>
 
   <!-- Gradients -->

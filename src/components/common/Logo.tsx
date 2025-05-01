@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 interface LogoProps {
   className?: string;
-  size?: 'small' | 'medium' | 'large';
+  size?: 'small' | 'medium' | 'large' | 'xlarge';
   animated?: boolean;
 }
 
@@ -12,7 +12,8 @@ const Logo = ({ className = '', size = 'medium', animated = true }: LogoProps) =
   const sizeClass = {
     'small': 'h-8',
     'medium': 'h-10',
-    'large': 'h-20'
+    'large': 'h-20',
+    'xlarge': 'h-40'
   }[size];
 
   return (
