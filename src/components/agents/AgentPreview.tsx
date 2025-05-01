@@ -14,6 +14,13 @@ const AZURE_OPENAI_DEPLOYMENT_NAME = import.meta.env.VITE_AZURE_OPENAI_DEPLOYMEN
 const AZURE_OPENAI_API_VERSION = import.meta.env.VITE_AZURE_OPENAI_API_VERSION;
 const AZURE_OPENAI_MODEL = import.meta.env.VITE_AZURE_OPENAI_MODEL as "gpt-4o-realtime-preview";
 
+// Voice IDs for different genders
+const VOICE_IDS = {
+  male: "TxGEqnHWrfWFTfGW9XjX", // Male voice ID
+  female: "EXAVITQu4vr4xnSDxMaL", // Female voice ID
+  neutral: "onwK4e9ZLuTAKqWW03F9", // Neutral voice ID
+};
+
 interface AgentPreviewProps {
   agent: Agent;
 }
@@ -21,6 +28,9 @@ interface AgentPreviewProps {
 const AgentPreview = ({ agent }: AgentPreviewProps) => {
   const [isMuted, setIsMuted] = useState(false);
   const [messages, setMessages] = useState<{type: 'user' | 'agent', text: string}[]>([]);
+  
+  // Get the appropriate voice ID based on agent gender
+  const voiceId = VOICE_IDS[agent.gender] || VOICE_IDS.neutral;
   
   // Handle transcript updates
   const handleTranscript = (text: string, isFinal: boolean) => {
@@ -50,6 +60,7 @@ const AgentPreview = ({ agent }: AgentPreviewProps) => {
     azureOpenAIApiVersion: AZURE_OPENAI_API_VERSION,
     azureOpenAIDeploymentName: AZURE_OPENAI_DEPLOYMENT_NAME,
     azureOpenAIModel: AZURE_OPENAI_MODEL,
+    voiceId: voiceId,
     onTranscript: handleTranscript,
     onAIResponse: handleAIResponse,
   });

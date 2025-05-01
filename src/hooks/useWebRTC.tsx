@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 
@@ -16,6 +15,7 @@ interface UseWebRTCProps {
   azureOpenAIApiVersion?: string;
   azureOpenAIDeploymentName?: string;
   azureOpenAIModel?: AzureOpenAIModelType;
+  voiceId?: string;
   onTranscript?: (text: string, isFinal: boolean) => void;
   onAIResponse?: (text: string, isFinal: boolean) => void;
 }
@@ -26,6 +26,7 @@ export function useWebRTC({
   azureOpenAIApiVersion,
   azureOpenAIDeploymentName,
   azureOpenAIModel = "gpt-4o-realtime-preview",
+  voiceId,
   onTranscript,
   onAIResponse,
 }: UseWebRTCProps) {
@@ -203,14 +204,15 @@ export function useWebRTC({
         console.log('WebSocket connection established with Azure OpenAI');
         setIsProcessing(true);
         
-        // Initialize session with proper format
+        // Initialize session with proper format including voice ID
         realtimeClient.send({
           type: "session.update",
           session: {
             modalities: ["text", "audio"],
             model: azureOpenAIModel,
             voice: {
-              type: "text-to-speech"
+              type: "text-to-speech",
+              id: voiceId || "onwK4e9ZLuTAKqWW03F9" // Use provided voiceId or default to a neutral voice
             }
           }
         });
