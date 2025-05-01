@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import Logo from '@/components/common/Logo';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -38,9 +39,7 @@ const Navbar = () => {
         </SidebarTrigger>
         
         <div className="flex-1">
-<span className="hidden md:inline-block text-xl font-bold neon-text">
-            Vaani.dev
-          </span>
+          <Logo size="small" className="hidden md:inline-block" />
         </div>
         
         <div className="flex items-center gap-2">

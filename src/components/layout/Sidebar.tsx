@@ -14,6 +14,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
+import Logo from "@/components/common/Logo";
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -45,8 +46,8 @@ const Sidebar = () => {
   return (
     <SidebarComponent>
       <SidebarHeader className="py-4">
-        <div className="px-4">
-          <h3 className="text-lg font-bold neon-text">Vaani.dev</h3>
+        <div className="px-4 flex items-center">
+          <Logo size="medium" />
         </div>
         <div className="px-2 pt-4">
           <Button 
