@@ -121,6 +121,14 @@ const Landing = () => {
         </div>
       </div>
 
+      {/* Enhanced Background Elements */}
+      <div className="fixed inset-0 pointer-events-none z-0 opacity-20">
+        <div className="absolute inset-0 bg-grid-pattern"></div>
+        <div className="absolute inset-0 bg-noise-pattern mix-blend-soft-light"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-radial-top opacity-30"></div>
+        <div className="absolute bottom-0 right-0 w-2/3 h-2/3 bg-gradient-radial-bottom opacity-20"></div>
+      </div>
+
       {/* Hero Section */}
       <section 
         ref={el => sectionsRef.current.hero = el} 
@@ -191,10 +199,17 @@ const Landing = () => {
           animate="visible"
           variants={containerVariants}
         >
-          {/* Hero Logo Centered */}
-          <motion.div variants={itemVariants} className="flex justify-center">
-            <Logo className="mx-auto mb-8" size="hero" />
+          {/* Centered Logo */}
+          <motion.div variants={itemVariants} className="flex justify-center w-full">
+            <Logo className="mx-auto" size="hero" />
           </motion.div>
+          
+          <motion.h1
+            className="text-4xl md:text-5xl font-bold mb-4 text-gradient"
+            variants={itemVariants}
+          >
+            Vaani.dev
+          </motion.h1>
           
           <motion.p
             className="text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl mx-auto"
@@ -212,14 +227,17 @@ const Landing = () => {
             </Button>
           </motion.div>
           
-          <motion.button 
-            className="scroll-down-btn mt-20"
-            onClick={() => scrollToSection('features')}
-            variants={itemVariants}
-            whileHover={{ y: 5 }}
-          >
-            <ChevronDown className="w-8 h-8 text-primary animate-bounce" />
-          </motion.button>
+          {/* Centered Chevron Down */}
+          <div className="w-full flex justify-center">
+            <motion.button 
+              className="scroll-down-btn mt-20"
+              onClick={() => scrollToSection('features')}
+              variants={itemVariants}
+              whileHover={{ y: 5 }}
+            >
+              <ChevronDown className="w-8 h-8 text-primary animate-bounce" />
+            </motion.button>
+          </div>
         </motion.div>
       </section>
 

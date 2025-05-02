@@ -37,6 +37,16 @@ const Layout = ({ children }: LayoutProps) => {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      {/* Enhanced Background Elements */}
+      <div className="fixed inset-0 pointer-events-none z-0 opacity-20">
+        <div className="absolute inset-0 bg-grid-pattern"></div>
+        <div className="absolute inset-0 bg-noise-pattern mix-blend-soft-light"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-radial-top opacity-30"></div>
+        <div className="absolute bottom-0 right-0 w-2/3 h-2/3 bg-gradient-radial-bottom opacity-20"></div>
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-primary/5 filter blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 rounded-full bg-secondary/5 filter blur-3xl"></div>
+      </div>
+      
       <SidebarProvider>
         <div className="flex h-screen w-full">
           <Sidebar />

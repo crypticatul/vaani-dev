@@ -109,7 +109,7 @@ const Sidebar = () => {
                             whileTap={{ scale: 0.95 }}
                             onClick={() => navigate(item.path)}
                           >
-                            <item.icon size={22} />
+                            <item.icon size={24} className="neo-glow-icon" /> {/* Increased icon size */}
                           </motion.div>
                         </TooltipTrigger>
                         <TooltipContent side="right">{item.title}</TooltipContent>
@@ -124,10 +124,13 @@ const Sidebar = () => {
                       <motion.div
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className="flex items-center gap-2"
+                        className="flex items-center gap-3" // Increased gap for more spacing
                       >
-                        <item.icon size={20} className={`${location.pathname === item.path ? 'text-white' : 'text-primary'} group-hover:text-white transition-colors duration-300`} />
-                        <span>{item.title}</span>
+                        <item.icon 
+                          size={22} 
+                          className={`${location.pathname === item.path ? 'text-white neo-glow-icon' : 'text-primary'} group-hover:text-white transition-colors duration-300`} 
+                        />
+                        <span className="text-base">{item.title}</span> {/* Slightly increased text size */}
                       </motion.div>
                     </SidebarMenuButton>
                   )}

@@ -14,7 +14,7 @@ const Logo = ({ className = '', size = 'medium', animated = true }: LogoProps) =
     'medium': 'h-10',
     'large': 'h-20',
     'xlarge': 'h-40',
-    'hero': 'h-60'
+    'hero': 'h-48'  // Adjusted hero size to be smaller
   }[size];
 
   return (
