@@ -15,7 +15,7 @@
   </g>
 
   <!-- वाani Text - Positioned below the sound waves -->
-  <text x="86" y="64" font-family="Orbitron, sans-serif" font-weight="800" font-size="22" class="logo-text">
+  <text x="86" y="84" font-family="Orbitron, sans-serif" font-weight="800" font-size="22" class="logo-text">
     <tspan fill="#F1F0FB" class="glow-effect">VA</tspan><tspan fill="#F1F1F1" class="glow-effect">ANI</tspan>
   </text>
 
@@ -36,7 +36,7 @@
     
     <!-- Filter for the text glow effect -->
     <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="2" result="blur" />
+      <feGaussianBlur stdDeviation="3" result="blur" />
       <feComposite in="SourceGraphic" in2="blur" operator="over" />
     </filter>
   </defs>
@@ -44,7 +44,7 @@
   <style>
     .sound-wave .bar {
       transform-origin: center bottom;
-      animation-duration: 2s;
+      animation-duration: 2.5s;
       animation-iteration-count: infinite;
       animation-timing-function: cubic-bezier(0.445, 0.05, 0.55, 0.95);
     }
@@ -69,7 +69,8 @@
     }
     
     .logo-text {
-      animation: pulse 2s infinite ease-in-out;
+      animation: pulse 3s infinite ease-in-out;
+      filter: url(#glow);
     }
     
     .glow-effect {
@@ -78,7 +79,7 @@
     
     @keyframes pulse {
       0%, 100% { opacity: 1; }
-      50% { opacity: 0.9; }
+      50% { opacity: 0.8; }
     }
   </style>
 </svg>

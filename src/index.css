@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&display=swap');
+
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
@@ -39,6 +39,10 @@
 
   * {
     @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
   }
 
   body {
@@ -97,7 +101,7 @@
 
   .sound-wave span {
     @apply w-1 bg-primary rounded-full;
-    animation: waveform 1.5s ease-in-out infinite;
+    animation: waveform 1.8s ease-in-out infinite;
   }
 
   .sound-wave span:nth-child(1) { animation-delay: -0.5s; }
@@ -140,7 +144,7 @@
   }
 
   .feature-card {
-    @apply p-6 rounded-xl transition-all duration-300;
+    @apply p-6 rounded-xl transition-all duration-500;
     background: rgba(20, 20, 25, 0.6);
     backdrop-filter: blur(10px);
     border: 1px solid theme('colors.primary.DEFAULT / 20%');
@@ -164,6 +168,44 @@
   .gradient-btn:hover {
     @apply opacity-90;
     box-shadow: 0 0 20px rgba(0, 255, 194, 0.3);
+  }
+
+  /* Sidebar improvements */
+  .sidebar-icon {
+    @apply relative flex items-center justify-center h-12 w-12 mt-2 mb-2 mx-auto
+      bg-card text-primary hover:text-white rounded-xl hover:rounded-3xl
+      transition-all duration-300 ease-linear cursor-pointer shadow-lg;
+  }
+
+  .sidebar-icon:hover {
+    @apply border border-primary/40;
+    box-shadow: 0 0 15px theme('colors.primary.DEFAULT / 30%'),
+                0 0 30px theme('colors.primary.DEFAULT / 10%');
+  }
+
+  .sidebar-icon.active {
+    @apply bg-primary text-white rounded-3xl;
+    box-shadow: 0 0 15px theme('colors.primary.DEFAULT / 50%'),
+                0 0 30px theme('colors.primary.DEFAULT / 20%');
+  }
+
+  .sidebar-tooltip {
+    @apply absolute w-auto p-2 m-2 min-w-max left-14 rounded-md shadow-md
+      text-white bg-card/90 backdrop-blur-md border border-primary/20
+      text-xs font-bold transition-all duration-100 origin-left scale-0;
+  }
+
+  .sidebar-icon:hover .sidebar-tooltip {
+    @apply scale-100;
+  }
+
+  .scroll-hint {
+    @apply absolute bottom-10 left-1/2 transform -translate-x-1/2 w-8 h-12 rounded-full border-2 border-white/30 flex items-center justify-center;
+  }
+  
+  .scroll-hint::before {
+    content: '';
+    @apply absolute w-1.5 h-1.5 bg-white rounded-full animate-bounce;
   }
 }
 
@@ -219,6 +261,29 @@
   }
 }
 
+/* Page transition animations */
+.page-transition-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.page-transition-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 400ms ease-in-out, transform 400ms ease-in-out;
+}
+
+.page-transition-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-transition-exit-active {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 300ms ease-in-out, transform 300ms ease-in-out;
+}
+
 .animate-fade-in-up {
   animation: fadeIn 0.8s ease-out forwards;
 }
@@ -246,24 +311,24 @@
     radial-gradient(circle at 80% 70%, rgba(189, 0, 255, 0.05) 0%, transparent 50%);
 }
 
-  .wave-pattern {
-    @apply absolute inset-0 pointer-events-none opacity-5;
-    background-image:
-      repeating-linear-gradient(
-        45deg,
-        rgba(0, 255, 194, 0.1) 0px,
-        rgba(0, 255, 194, 0.1) 1px,
-        transparent 1px,
-        transparent 10px
-      ),
-      repeating-linear-gradient(
-        -45deg,
-        rgba(189, 0, 255, 0.1) 0px,
-        rgba(189, 0, 255, 0.1) 1px,
-        transparent 1px,
-        transparent 10px
-      );
-  }
+.wave-pattern {
+  @apply absolute inset-0 pointer-events-none opacity-5;
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      rgba(0, 255, 194, 0.1) 0px,
+      rgba(0, 255, 194, 0.1) 1px,
+      transparent 1px,
+      transparent 10px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(189, 0, 255, 0.1) 0px,
+      rgba(189, 0, 255, 0.1) 1px,
+      transparent 1px,
+      transparent 10px
+    );
+}
 
 .purple-blob {
   position: absolute;
@@ -275,4 +340,24 @@
 
 .scroll-down-btn {
   @apply flex flex-col items-center justify-center mt-12 cursor-pointer transition-all;
+}
+
+/* Improved Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(111, 78, 246, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(111, 78, 246, 0.7);
 }

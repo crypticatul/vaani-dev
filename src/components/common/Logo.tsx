@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 interface LogoProps {
   className?: string;
-  size?: 'small' | 'medium' | 'large' | 'xlarge';
+  size?: 'small' | 'medium' | 'large' | 'xlarge' | 'hero';
   animated?: boolean;
 }
 
@@ -13,11 +13,12 @@ const Logo = ({ className = '', size = 'medium', animated = true }: LogoProps) =
     'small': 'h-8',
     'medium': 'h-10',
     'large': 'h-20',
-    'xlarge': 'h-40'
+    'xlarge': 'h-40',
+    'hero': 'h-60'
   }[size];
 
   return (
-    <div className={`inline-flex items-center ${className}`}>
+    <div className={`inline-flex items-center justify-center ${className}`}>
       {animated ? (
         <motion.img 
           src="/logo.svg" 
@@ -31,7 +32,7 @@ const Logo = ({ className = '', size = 'medium', animated = true }: LogoProps) =
           }}
           whileHover={{ 
             scale: 1.05,
-            transition: { duration: 0.3 }
+            transition: { duration: 0.4, ease: "easeInOut" }
           }}
         />
       ) : (
