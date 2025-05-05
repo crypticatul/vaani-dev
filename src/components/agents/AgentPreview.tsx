@@ -14,11 +14,11 @@ const AZURE_OPENAI_DEPLOYMENT_NAME = import.meta.env.VITE_AZURE_OPENAI_DEPLOYMEN
 const AZURE_OPENAI_API_VERSION = import.meta.env.VITE_AZURE_OPENAI_API_VERSION;
 const AZURE_OPENAI_MODEL = import.meta.env.VITE_AZURE_OPENAI_MODEL as "gpt-4o-realtime-preview";
 
-// Voice IDs for different genders
+// Voice IDs for different genders - Updated to use Azure OpenAI supported voices
 const VOICE_IDS = {
-  male: "TxGEqnHWrfWFTfGW9XjX", // Male voice ID
-  female: "EXAVITQu4vr4xnSDxMaL", // Female voice ID
-  neutral: "onwK4e9ZLuTAKqWW03F9", // Neutral voice ID
+  male: "echo", // Male voice
+  female: "shimmer", // Female voice
+  neutral: "alloy", // Neutral voice
 };
 
 interface AgentPreviewProps {

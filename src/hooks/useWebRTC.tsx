@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 
@@ -10,13 +9,27 @@ type AzureOpenAIModelType =
   | "gpt-4o-realtime-preview-2024-12-17"
   | "gpt-4o-mini-realtime-preview-2024-12-17";
 
+// Define valid Azure OpenAI voice IDs
+type AzureOpenAIVoiceType = 
+  | "alloy" 
+  | "echo" 
+  | "fable" 
+  | "onyx" 
+  | "nova" 
+  | "shimmer"
+  | "sage"
+  | "coral"
+  | "ash"
+  | "ballad"
+  | "verse";
+
 interface UseWebRTCProps {
   azureOpenAIApiKey?: string;
   azureOpenAIEndpoint?: string;
   azureOpenAIApiVersion?: string;
   azureOpenAIDeploymentName?: string;
   azureOpenAIModel?: AzureOpenAIModelType;
-  voiceId?: string;
+  voiceId?: AzureOpenAIVoiceType;
   onTranscript?: (text: string, isFinal: boolean) => void;
   onAIResponse?: (text: string, isFinal: boolean) => void;
 }
@@ -27,7 +40,7 @@ export function useWebRTC({
   azureOpenAIApiVersion,
   azureOpenAIDeploymentName,
   azureOpenAIModel = "gpt-4o-realtime-preview",
-  voiceId,
+  voiceId = "alloy", // Default to 'alloy' as the neutral voice
   onTranscript,
   onAIResponse,
 }: UseWebRTCProps) {
@@ -205,13 +218,13 @@ export function useWebRTC({
         console.log('WebSocket connection established with Azure OpenAI');
         setIsProcessing(true);
         
-        // Initialize session with proper format - FIXED: Removed voice.type parameter that was causing the error
+        // Initialize session with the proper voice format for Azure OpenAI
         realtimeClient.send({
           type: "session.update",
           session: {
             modalities: ["text", "audio"],
             model: azureOpenAIModel,
-            voice: voiceId || "onwK4e9ZLuTAKqWW03F9" // Modified: Just pass the voice ID directly
+            voice: voiceId // Use the valid Azure OpenAI voice ID
           }
         });
         
