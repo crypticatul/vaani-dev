@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 
@@ -204,16 +205,13 @@ export function useWebRTC({
         console.log('WebSocket connection established with Azure OpenAI');
         setIsProcessing(true);
         
-        // Initialize session with proper format including voice ID
+        // Initialize session with proper format - FIXED: Removed voice.type parameter that was causing the error
         realtimeClient.send({
           type: "session.update",
           session: {
             modalities: ["text", "audio"],
             model: azureOpenAIModel,
-            voice: {
-              type: "text-to-speech",
-              id: voiceId || "onwK4e9ZLuTAKqWW03F9" // Use provided voiceId or default to a neutral voice
-            }
+            voice: voiceId || "onwK4e9ZLuTAKqWW03F9" // Modified: Just pass the voice ID directly
           }
         });
         
