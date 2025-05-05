@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 
@@ -321,24 +320,20 @@ export function useWebRTC({
 
             case "response.content_part.added":
               // Handle content part added
-              const contentPart = response.item?.text ?? response.delta ?? '';
-              if (!contentPart) {
-                console.debug("Unexpected content_part format", response);
-              }
-              setAIResponse(prev => prev + contentPart);
-              if (onAIResponse) {
-                onAIResponse(contentPart, false);
+              if (response.part?.type === "text") {
+                const contentPart = response.part.text || '';
+                setAIResponse(prev => prev + contentPart);
+                if (onAIResponse) {
+                  onAIResponse(contentPart, false);
+                }
               }
               break;
 
             case "response.audio.delta":
               // Handle streaming audio chunk
-              const audioPayload = response.item?.payload ?? response.payload ?? '';
-              if (!audioPayload) {
-                console.debug("Unexpected audio.delta format", response);
-              } else if (audioContextRef.current) {
+              if (response.payload && audioContextRef.current) {
                 try {
-                  const audioData = Uint8Array.from(atob(audioPayload), c => c.charCodeAt(0)).buffer;
+                  const audioData = Uint8Array.from(atob(response.payload), c => c.charCodeAt(0)).buffer;
                   audioContextRef.current.decodeAudioData(audioData).then(decodedData => {
                     const source = audioContextRef.current.createBufferSource();
                     source.buffer = decodedData;
