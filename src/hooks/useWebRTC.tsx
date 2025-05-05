@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 
@@ -320,6 +321,7 @@ export function useWebRTC({
 
             case "response.content_part.added":
               // Handle content part added
+              console.log("Content part added", response.part);
               if (response.part?.type === "text") {
                 const contentPart = response.part.text || '';
                 setAIResponse(prev => prev + contentPart);
@@ -328,9 +330,15 @@ export function useWebRTC({
                 }
               }
               break;
+              
+            case "response.content_part.done":
+              // Content part is complete
+              console.log("Content part completed", response);
+              break;
 
             case "response.audio.delta":
               // Handle streaming audio chunk
+              console.log("Audio delta received");
               if (response.payload && audioContextRef.current) {
                 try {
                   const audioData = Uint8Array.from(atob(response.payload), c => c.charCodeAt(0)).buffer;
@@ -344,6 +352,11 @@ export function useWebRTC({
                   console.error('Error processing audio chunk:', error);
                 }
               }
+              break;
+              
+            case "response.audio.done":
+              // Audio streaming is complete
+              console.log("Audio stream ended");
               break;
 
             case "error":
