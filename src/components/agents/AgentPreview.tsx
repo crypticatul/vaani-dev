@@ -14,8 +14,11 @@ const AZURE_OPENAI_DEPLOYMENT_NAME = import.meta.env.VITE_AZURE_OPENAI_DEPLOYMEN
 const AZURE_OPENAI_API_VERSION = import.meta.env.VITE_AZURE_OPENAI_API_VERSION;
 const AZURE_OPENAI_MODEL = import.meta.env.VITE_AZURE_OPENAI_MODEL as "gpt-4o-realtime-preview";
 
+// Import the voice type from useWebRTC
+import type { AzureOpenAIVoiceType } from '@/hooks/useWebRTC';
+
 // Voice IDs for different genders - Updated to use Azure OpenAI supported voices
-const VOICE_IDS = {
+const VOICE_IDS: Record<string, AzureOpenAIVoiceType> = {
   male: "echo", // Male voice
   female: "shimmer", // Female voice
   neutral: "alloy", // Neutral voice
@@ -30,7 +33,7 @@ const AgentPreview = ({ agent }: AgentPreviewProps) => {
   const [messages, setMessages] = useState<{type: 'user' | 'agent', text: string}[]>([]);
   
   // Get the appropriate voice ID based on agent gender
-  const voiceId = VOICE_IDS[agent.gender] || VOICE_IDS.neutral;
+  const voiceId: AzureOpenAIVoiceType = VOICE_IDS[agent.gender] || VOICE_IDS.neutral;
   
   // Handle transcript updates
   const handleTranscript = (text: string, isFinal: boolean) => {

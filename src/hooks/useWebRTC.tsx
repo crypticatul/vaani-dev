@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 
@@ -10,7 +11,7 @@ type AzureOpenAIModelType =
   | "gpt-4o-mini-realtime-preview-2024-12-17";
 
 // Define valid Azure OpenAI voice IDs
-type AzureOpenAIVoiceType = 
+export type AzureOpenAIVoiceType = 
   | "alloy" 
   | "echo" 
   | "fable" 
