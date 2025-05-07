@@ -337,11 +337,14 @@ export function useWebRTC({
               break;
 
             case "response.audio.delta":
-              // Handle streaming audio chunk
+              // Handle streaming audio chunk - FIXED VERSION
               console.log("Audio delta received");
+              // The audio payload is now in response.payload for audio.delta events
               if (response.payload && audioContextRef.current) {
                 try {
+                  // Decode base64 audio data
                   const audioData = Uint8Array.from(atob(response.payload), c => c.charCodeAt(0)).buffer;
+                  // Process audio data with AudioContext
                   audioContextRef.current.decodeAudioData(audioData).then(decodedData => {
                     const source = audioContextRef.current.createBufferSource();
                     source.buffer = decodedData;
@@ -350,6 +353,19 @@ export function useWebRTC({
                   }).catch(err => console.error('Error decoding audio data:', err));
                 } catch (error) {
                   console.error('Error processing audio chunk:', error);
+                }
+              } else if (response.item?.payload && audioContextRef.current) {
+                // Alternative structure - some versions might use response.item.payload
+                try {
+                  const audioData = Uint8Array.from(atob(response.item.payload), c => c.charCodeAt(0)).buffer;
+                  audioContextRef.current.decodeAudioData(audioData).then(decodedData => {
+                    const source = audioContextRef.current.createBufferSource();
+                    source.buffer = decodedData;
+                    source.connect(audioContextRef.current.destination);
+                    source.start();
+                  }).catch(err => console.error('Error decoding audio data:', err));
+                } catch (error) {
+                  console.error('Error processing audio chunk from item payload:', error);
                 }
               }
               break;
