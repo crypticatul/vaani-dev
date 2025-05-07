@@ -140,7 +140,7 @@ export const createWebSocketClient = (
             
           case "response.text.done":
             // Final transcript
-            if (onTranscript && !response.transcript) {
+            if (onTranscript) {
               onTranscript(response.transcript || '', true);
             }
             break;
@@ -178,14 +178,31 @@ export const createWebSocketClient = (
           case "response.audio.delta":
             // Handle streaming audio chunk
             console.log("Audio delta received");
-            // Check for payload in different locations based on API version
-            if (response.payload && audioContext) {
-              processAudioChunk(audioContext, response.payload)
-                .catch(err => console.error('Error with audio processing:', err));
-            } else if (response.item?.payload && audioContext) {
-              // Alternative structure - some versions might use response.item.payload
-              processAudioChunk(audioContext, response.item.payload)
-                .catch(err => console.error('Error with audio processing from item payload:', err));
+            
+            // Extract audio payload from different possible locations
+            let audioPayload = null;
+            
+            // Check for direct payload
+            if (response.payload) {
+              audioPayload = response.payload;
+            } 
+            // Check for payload in response.item
+            else if (response.item?.payload) {
+              audioPayload = response.item.payload;
+            } 
+            // Check for payload in response.part
+            else if (response.part?.payload) {
+              audioPayload = response.part.payload;
+            }
+            
+            // Process audio if payload found and audioContext exists
+            if (audioPayload && audioContext) {
+              try {
+                processAudioChunk(audioContext, audioPayload)
+                  .catch(err => console.error('Error with audio processing:', err));
+              } catch (err) {
+                console.error('Failed to process audio payload:', err);
+              }
             }
             break;
             
