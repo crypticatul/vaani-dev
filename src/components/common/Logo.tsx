@@ -1,5 +1,5 @@
 
-import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
 
 interface LogoProps {
   className?: string;
@@ -8,40 +8,36 @@ interface LogoProps {
 }
 
 const Logo = ({ className = '', size = 'medium', animated = true }: LogoProps) => {
+  const [isLoaded, setIsLoaded] = useState(!animated);
+  
+  useEffect(() => {
+    if (animated) {
+      const timer = setTimeout(() => setIsLoaded(true), 100);
+      return () => clearTimeout(timer);
+    }
+  }, [animated]);
+
   // Determine size class
   const sizeClass = {
     'small': 'h-8',
     'medium': 'h-10',
     'large': 'h-20',
-    'xlarge': 'h-40',
-    'hero': 'h-48'  // Adjusted hero size to be smaller
+    'xlarge': 'h-32',
+    'hero': 'h-40'  // Reduced hero size
   }[size];
 
   return (
     <div className={`inline-flex items-center justify-center ${className}`}>
-      {animated ? (
-        <motion.img 
-          src="/logo.svg" 
-          alt="वाani.dev Logo" 
-          className={sizeClass}
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ 
-            duration: 0.7,
-            ease: "easeInOut"
-          }}
-          whileHover={{ 
-            scale: 1.05,
-            transition: { duration: 0.4, ease: "easeInOut" }
-          }}
-        />
-      ) : (
-        <img 
-          src="/logo.svg" 
-          alt="वाani.dev Logo" 
-          className={sizeClass}
-        />
-      )}
+      <img 
+        src="/logo.svg" 
+        alt="वाani.dev Logo" 
+        className={`${sizeClass} ${animated ? 'transition-all duration-500' : ''}`}
+        style={{
+          opacity: isLoaded ? 1 : 0,
+          transform: isLoaded ? 'translateY(0)' : 'translateY(-10px)'
+        }}
+        onLoad={() => setIsLoaded(true)}
+      />
     </div>
   );
 };
