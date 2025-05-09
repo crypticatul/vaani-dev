@@ -1,4 +1,5 @@
 
+import { memo } from 'react';
 import { ChevronDown, Sparkles, Shield, Zap } from 'lucide-react';
 
 interface FeaturesSectionProps {
@@ -58,4 +59,4 @@ const FeaturesSection = ({ scrollToSection, isVisible }: FeaturesSectionProps) =
   );
 };
 
-export default FeaturesSection;
+export default memo(FeaturesSection);

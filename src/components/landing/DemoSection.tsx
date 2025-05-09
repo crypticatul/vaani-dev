@@ -1,4 +1,5 @@
 
+import { memo } from 'react';
 import { ChevronDown, Bot } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -43,4 +44,4 @@ const DemoSection = ({ scrollToSection, isVisible }: DemoSectionProps) => {
   );
 };
 
-export default DemoSection;
+export default memo(DemoSection);

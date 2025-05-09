@@ -1,13 +1,22 @@
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, lazy, Suspense } from 'react';
 
-// Import individual sections
-import HeroSection from '@/components/landing/HeroSection';
-import FeaturesSection from '@/components/landing/FeaturesSection';
-import GetStartedSection from '@/components/landing/GetStartedSection';
-import DemoSection from '@/components/landing/DemoSection';
-import CtaSection from '@/components/landing/CtaSection';
+// Import the navbar component directly (small component)
 import LandingNavbar from '@/components/landing/LandingNavbar';
+
+// Lazy load the section components
+const HeroSection = lazy(() => import('@/components/landing/HeroSection'));
+const FeaturesSection = lazy(() => import('@/components/landing/FeaturesSection'));
+const GetStartedSection = lazy(() => import('@/components/landing/GetStartedSection'));
+const DemoSection = lazy(() => import('@/components/landing/DemoSection'));
+const CtaSection = lazy(() => import('@/components/landing/CtaSection'));
+
+// Loading fallback component
+const SectionSkeleton = () => (
+  <div className="min-h-screen flex items-center justify-center">
+    <div className="w-12 h-12 rounded-full border-4 border-primary border-t-transparent animate-spin"></div>
+  </div>
+);
 
 const Landing = () => {
   const [activeSection, setActiveSection] = useState('hero');
@@ -86,39 +95,49 @@ const Landing = () => {
 
       {/* Hero Section */}
       <div ref={el => sectionsRef.current.hero = el}>
-        <HeroSection scrollToSection={scrollToSection} />
+        <Suspense fallback={<SectionSkeleton />}>
+          <HeroSection scrollToSection={scrollToSection} />
+        </Suspense>
       </div>
 
       {/* Features Section */}
       <div ref={el => sectionsRef.current.features = el}>
-        <FeaturesSection 
-          scrollToSection={scrollToSection} 
-          isVisible={isVisible.features} 
-        />
+        <Suspense fallback={<SectionSkeleton />}>
+          <FeaturesSection 
+            scrollToSection={scrollToSection} 
+            isVisible={isVisible.features} 
+          />
+        </Suspense>
       </div>
 
       {/* How To Get Started Section */}
       <div ref={el => sectionsRef.current.getStarted = el}>
-        <GetStartedSection 
-          scrollToSection={scrollToSection} 
-          isVisible={isVisible.getStarted} 
-        />
+        <Suspense fallback={<SectionSkeleton />}>
+          <GetStartedSection 
+            scrollToSection={scrollToSection} 
+            isVisible={isVisible.getStarted} 
+          />
+        </Suspense>
       </div>
 
       {/* Demo Section */}
       <div ref={el => sectionsRef.current.demo = el}>
-        <DemoSection 
-          scrollToSection={scrollToSection} 
-          isVisible={isVisible.demo} 
-        />
+        <Suspense fallback={<SectionSkeleton />}>
+          <DemoSection 
+            scrollToSection={scrollToSection} 
+            isVisible={isVisible.demo} 
+          />
+        </Suspense>
       </div>
 
       {/* CTA Section */}
       <div ref={el => sectionsRef.current.cta = el}>
-        <CtaSection 
-          scrollToSection={scrollToSection} 
-          isVisible={isVisible.cta} 
-        />
+        <Suspense fallback={<SectionSkeleton />}>
+          <CtaSection 
+            scrollToSection={scrollToSection} 
+            isVisible={isVisible.cta} 
+          />
+        </Suspense>
       </div>
     </div>
   );

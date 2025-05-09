@@ -1,4 +1,5 @@
 
+import { memo } from 'react';
 import { ChevronUp, Mic } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -47,4 +48,4 @@ const CtaSection = ({ scrollToSection, isVisible }: CtaSectionProps) => {
   );
 };
 
-export default CtaSection;
+export default memo(CtaSection);

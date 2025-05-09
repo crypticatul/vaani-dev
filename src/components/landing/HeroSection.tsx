@@ -1,5 +1,5 @@
 
-import { useRef } from 'react';
+import { useRef, memo } from 'react';
 import { Button } from '@/components/ui/button';
 import { ChevronDown } from 'lucide-react';
 import Logo from '@/components/common/Logo';
@@ -42,4 +42,4 @@ const HeroSection = ({ scrollToSection, isVisible = true }: HeroSectionProps) =>
   );
 };
 
-export default HeroSection;
+export default memo(HeroSection);

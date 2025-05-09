@@ -1,4 +1,5 @@
 
+import { memo } from 'react';
 import { ChevronDown, Bot, Copy, Globe } from 'lucide-react';
 
 interface GetStartedSectionProps {
@@ -52,4 +53,4 @@ const GetStartedSection = ({ scrollToSection, isVisible }: GetStartedSectionProp
   );
 };
 
-export default GetStartedSection;
+export default memo(GetStartedSection);

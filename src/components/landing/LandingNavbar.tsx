@@ -1,5 +1,5 @@
 
-import React from 'react';
+import { memo } from 'react';
 
 interface LandingNavbarProps {
   activeSection: string;
@@ -36,4 +36,4 @@ const LandingNavbar = ({ activeSection, scrollToSection, sections }: LandingNavb
   );
 };
 
-export default LandingNavbar;
+export default memo(LandingNavbar);
